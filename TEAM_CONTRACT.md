@@ -22,6 +22,8 @@ For the next several weeks, we will participate effectively in this group and st
 
 - GitHub repository organization: Chen
 
+- Zoom meeting set up: Jared
+
 - Data analysis and visualization: Chen, Dabananda, Jared, Peter
 
 - Reports writing: Dabananda, Jared
@@ -32,10 +34,10 @@ For the next several weeks, we will participate effectively in this group and st
 
 | Day       | Start Time  | Duration | Zoom Link                                                                           | Note                                          |
 |-----------|-------------|----------|-------------------------------------------------------------------------------------|-----------------------------------------------|
-| Monday    | 1:30 pm PST | 15 mins  | [Join Zoom](https://ubc.zoom.us/j/63877607882?pwd=cEQyV2VyQjMxamk4aWQ1WFU1NW1OZz09) |                                               |
+| Monday    | 1:30 pm PST | 15 mins  | [Join Zoom](https://ubc.zoom.us/j/67820767795?pwd=WGFDeGlHUnJlNFNwaHdEM1h5MnNtZz09) |                                               |
 | Wednesday | 2:00 pm PST | 2 hrs    | Zoom link in Canvas                                                                 | Lab time                                      |
-| Friday    | 1:30 pm PST | 2 hrs    | [Join Zoom](https://ubc.zoom.us/j/63877607882?pwd=cEQyV2VyQjMxamk4aWQ1WFU1NW1OZz09) |                                               |
-| Saturday  | TBD         | TBD      | [Join Zoom](https://ubc.zoom.us/j/63877607882?pwd=cEQyV2VyQjMxamk4aWQ1WFU1NW1OZz09) | Scheduled based on project progress on Friday |
+| Friday    | 1:30 pm PST | 2 hrs    | [Join Zoom](https://ubc.zoom.us/j/67820767795?pwd=WGFDeGlHUnJlNFNwaHdEM1h5MnNtZz09) |                                               |
+| Saturday  | TBD         | TBD      | [Join Zoom](https://ubc.zoom.us/j/67820767795?pwd=WGFDeGlHUnJlNFNwaHdEM1h5MnNtZz09) | Scheduled based on project progress on Friday |
 
 ## Attribution
 
