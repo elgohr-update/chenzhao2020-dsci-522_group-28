@@ -24,7 +24,7 @@ To replicate the analysis, clone this GitHub repository, install the
 commands at the command line/terminal from the root directory of this
 project:
 
-   python src/download_data.py --out_type=feather --url= --out_file="
+   python src/download_data.py --out_type=feather --url= --out_file=
 
 ## Dependencies
 
