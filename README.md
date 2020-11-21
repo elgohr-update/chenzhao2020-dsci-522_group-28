@@ -31,18 +31,9 @@ project:
 
 (Update Dependencies )
 
-  - Python 3.7.3 and Python packages:
+  - Python 3.8.6 and Python packages:
       - docopt==0.6.2
-      - requests==2.22.0
-      - pandas==0.24.2
-      - feather-format==0.4.0
-  - R version 3.6.1 and R packages:
-      - knitr==1.26
-      - feather==0.3.5
-      - tidyverse==1.2.1
-      - caret==6.0-84
-      - ggridges==0.5.1
-      - ggthemes==4.2.0
+      - pandas==1.1.4
 
 ## License
 
