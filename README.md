@@ -25,7 +25,7 @@ To replicate the analysis, clone this GitHub repository, install the
 commands at the command line/terminal from the root directory of this
 project:
 
-   python src/download_data.py --out_type=feather --url= --out_file=
+   python src/getdata.py --source_url=https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-11/hotels.csv --target_file=data/raw/hotels_dataset.csv
 
 ## Dependencies
 
@@ -34,6 +34,10 @@ project:
   - Python 3.8.6 and Python packages:
       - docopt==0.6.2
       - pandas==1.1.4
+      - sklearn==0.23.2
+      - altair==4.1.0
+      - altair_saver==0.1.0
+      - numpy==1.19.4
 
 ## License
 
