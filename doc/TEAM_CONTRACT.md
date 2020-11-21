@@ -32,12 +32,12 @@ For the next several weeks, we will participate effectively in this group and st
 
 ## Meeting schedule
 
-| Day       | Start Time  | Duration | Zoom Link                                                                           | Note                                          |
-|-----------|-------------|----------|-------------------------------------------------------------------------------------|-----------------------------------------------|
-| Monday    | 1:30 pm PST | 15 mins  | [Join Zoom](https://ubc.zoom.us/j/67820767795?pwd=WGFDeGlHUnJlNFNwaHdEM1h5MnNtZz09) |                                               |
-| Wednesday | 2:00 pm PST | 2 hrs    | Zoom link in Canvas                                                                 | Lab time                                      |
-| Friday    | 1:30 pm PST | 2 hrs    | [Join Zoom](https://ubc.zoom.us/j/67820767795?pwd=WGFDeGlHUnJlNFNwaHdEM1h5MnNtZz09) |                                               |
-| Saturday  | TBD         | TBD      | [Join Zoom](https://ubc.zoom.us/j/67820767795?pwd=WGFDeGlHUnJlNFNwaHdEM1h5MnNtZz09) | Scheduled based on project progress on Friday |
+| Day       | Start Time  | Duration | Note                                          |
+|-----------|-------------|----------|-----------------------------------------------|
+| Monday    | 1:30 pm PST | 15 mins  | Zoom info shared in Slack                     |
+| Wednesday | 2:00 pm PST | 2 hrs    | Lab time                                      |
+| Friday    | 1:30 pm PST | 2 hrs    | Zoom info shared in Slack                     |
+| Saturday  | TBD         | TBD      | Scheduled based on project progress on Friday |
 
 ## Attribution
 
