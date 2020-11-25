@@ -6,9 +6,6 @@ in a specified ratio
 
 Usage: split_dataset_train_test.py --source_data_file=<source_data_file> --train_data_file=<train_data_file> --test_data_file=<test_data_file> [--test_split_ratio=<test_split_ratio>] [--chosen_seed=<chosen_seed>]
 
-DELETE:
-python src/split_dataset_train_test.py --source_data_file=data/raw/hotels_dataset.csv --train_data_file=data/processed/train_df.csv --test_data_file=data/processed/test_df.csv --test_split_ratio=0.2 --chosen_seed=2020
-
 Options:
 
 --source_data_file=<source_data_file>           Relative path of source data file
