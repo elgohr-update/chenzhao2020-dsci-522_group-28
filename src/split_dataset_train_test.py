@@ -1,5 +1,5 @@
 # author: Debananda Sarkar
-# date: 2020-11-20
+# date: 2020-11-25
 
 """This script will split data for training and testing
 in a specified ratio
