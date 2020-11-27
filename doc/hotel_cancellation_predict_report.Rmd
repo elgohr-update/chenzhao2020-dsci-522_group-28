@@ -1,0 +1,57 @@
+---
+title: "Hotel Cancellation Predict Report"
+bibliography: hotels_refs.bib
+author: "Jared Splinter"
+date: "11/27/2020"
+always_allow_html: true
+output: 
+  github_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+```
+
+# Predicting Hotel Booking Cancellation from Real World Hotel Bookings
+
+Jared Splinter,
+
+Created: 11/27/2020
+
+# Summary
+
+# Introduction
+
+The hospitality industry and hotels in particular suffer huge revenue losses due to booking cancellations and no shows. The revenue lost becomes a sunk cost when there is not enough time to book the room again before the date of stay [@xie2007service]. Hotels would like to get an estimate if a booking is likely to be cancelled as predicting cancellations is useful for a hotel's revenue management.
+
+Here we ask if we can use a machine learning algorithm to predict whether a given hotel booking is likely to be cancelled. Finding the conditions on which a booking is likely to be cancelled can help a hotel improve the conditions and limit the number of cancellations they receive, thereby increasing their revenue. If a booking is likely to be cancelled a hotel may also wish to implement higher cancellation fees to make up some of the lost revenue [@chen2011search]. If a machine learning algothrithm can accurately predict if a hotel booking will be cancelled it could help hotels make up some of their lost revenue and potentially find ways in which to improve customer satisfaction.
+
+# Methods
+
+## Data
+
+The data set used in this project comes from the Hotel Booking demand datasets from Antonio, Almeida and Nunes at Instituto Universitário de Lisboa (ISCTE-IUL), Lisbon, Portugal [@antonio2019hotel]. The data was sourced directly from the Github Repository [here](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-02-11). The dataset contains real world data obtained from two hotels; one resort hotel and one city hotel. Each row represents an individual hotel booking due to arrive between July 1st, 2015 and August 31st, 2017. There are 31 columns describing 40,060 observations from the resort hotel and 79,330 observations from the city hotel totalling 119,390 bookings.
+
+## Analysis
+
+Many classification model algorithms were compared using cross-validation so the best classification model could be selected. 5 fold cross validation was selected as the data set is quite large and it was scored on f1, precision, recall and accuracy as there is class imbalance within the dataset. f1 scores are reported as it is a good balance between recall and precision scores. The classification models compared are: Dummy Classifier, Decision Tree, K-nearest neighbor, SVC with RBF kernel, Logistic Regression, and Random Forest. 
+
+From there, Random Forest was chosen as the classification model and hyperparameter optimization was carried out using Random Search Cross-Validation. The hyperparameters optimized from Random Forest were `n_estimators` and `min_sample_split`. The best model from the Random Search Cross-validation was selected and used to fit on the train data and then to score on the test data. 4 features were dropped from the analysis: company, agent, reservation_status, and reservation_status_date.
+
+The Python programming language [@Python] and the following Python packages were used to perform the analysis: docopt [@docoptpython], pandas [@pandaspaper; @pandas], sklearn [@scikit-learn], altair [@altair], numpy [@numpy]. The code used to perform the analysis and create this report can be found here: <https://github.com/UBC-MDS/dsci-522_group-28>
+
+# Results & Discussion
+
+```{r, echo=FALSE, warning= FALSE, message=FALSE}
+
+df <- read_csv('../reports/five_fold_cross_validation_result.csv')
+
+kable(df, caption = "Table 1. A table that I have inserted") %>%
+  kable_styling(full_width = FALSE) 
+```
+
+# References
