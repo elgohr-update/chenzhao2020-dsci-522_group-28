@@ -19,7 +19,7 @@ The EDA report can be found
 [here](https://github.com/UBC-MDS/dsci-522_group-28/blob/main/src/hotels_data_preliminary_analysis_eda.ipynb).
 
 The final report can be found
-[here](https://github.com/ttimbers/breast_cancer_predictor/blob/v2.0/doc/breast_cancer_predict_report.md).
+[here](https://github.com/UBC-MDS/dsci-522_group-28/blob/main/doc/hotel_cancellation_predict_report.md).
 
 ## Usage
 
