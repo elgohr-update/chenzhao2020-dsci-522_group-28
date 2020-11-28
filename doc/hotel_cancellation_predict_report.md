@@ -11,6 +11,8 @@ Jared Splinter
       - [Data](#data)
       - [Analysis](#analysis)
   - [Results & Discussion](#results-discussion)
+      - [Exploratory Data Analysis](#exploratory-data-analysis)
+      - [Model Results](#model-results)
   - [References](#references)
 
 # Predicting Hotel Booking Cancellation from Real World Hotel Bookings
@@ -31,16 +33,15 @@ get an estimate if a booking is likely to be cancelled as predicting
 cancellations is useful for a hotel’s revenue management.
 
 Here we ask if we can use a machine learning algorithm to predict
-whether a given hotel booking is likely to be cancelled. Finding the
-conditions on which a booking is likely to be cancelled can help a hotel
+whether a given hotel booking is likely to be canceled. Finding the
+conditions on which a booking is likely to be canceled can help a hotel
 improve the conditions and limit the number of cancellations they
 receive, thereby increasing their revenue. If a booking is likely to be
-cancelled a hotel may also wish to implement higher cancellation fees to
+canceled a hotel may also wish to implement higher cancellation fees to
 make up some of the lost revenue (Chen, Schwartz, and Vargas 2011). If a
 machine learning algothrithm can accurately predict if a hotel booking
-will be cancelled it could help hotels make up some of their lost
-revenue and potentially find ways in which to improve customer
-satisfaction.
+will be canceled it could help hotels make up some of their lost revenue
+and potentially find ways in which to improve customer satisfaction.
 
 # Methods
 
@@ -55,7 +56,7 @@ The dataset contains real world data obtained from two hotels; one
 resort hotel and one city hotel. Each row represents an individual hotel
 booking due to arrive between July 1st, 2015 and August 31st, 2017.
 There are 31 columns describing 40,060 observations from the resort
-hotel and 79,330 observations from the city hotel totalling 119,390
+hotel and 79,330 observations from the city hotel totaling 119,390
 bookings.
 
 ## Analysis
@@ -87,11 +88,243 @@ be found here: <https://github.com/UBC-MDS/dsci-522_group-28>
 
 # Results & Discussion
 
+### Exploratory Data Analysis
+
+In our investigation of the dataset we sought to understand which
+features might be useful for prediction. Reading about the data
+collected we immediately decided that the columns `reservation_status`
+and `reservation_status_date` should be omitted from the model as they
+contain information after the prediction target and thus would not be
+useful. After establishing that there was a class imbalance between we
+checked to see if the dataset was “complete” (ie. if the dataset was
+missing values). The results of the missing values are presented in
+Table 1.
+
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 
 <caption>
 
-Table 1. A table that I have inserted
+Table 1. Predictors with missing values, number of values missing and
+percentage of values missing
+
+</caption>
+
+<thead>
+
+<tr>
+
+<th style="text-align:right;">
+
+X1
+
+</th>
+
+<th style="text-align:left;">
+
+feature
+
+</th>
+
+<th style="text-align:right;">
+
+missing\_count
+
+</th>
+
+<th style="text-align:right;">
+
+missing\_percentage
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:right;">
+
+10
+
+</td>
+
+<td style="text-align:left;">
+
+children
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:right;">
+
+13
+
+</td>
+
+<td style="text-align:left;">
+
+country
+
+</td>
+
+<td style="text-align:right;">
+
+385
+
+</td>
+
+<td style="text-align:right;">
+
+0.40
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:right;">
+
+23
+
+</td>
+
+<td style="text-align:left;">
+
+agent
+
+</td>
+
+<td style="text-align:right;">
+
+12966
+
+</td>
+
+<td style="text-align:right;">
+
+13.58
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:right;">
+
+24
+
+</td>
+
+<td style="text-align:left;">
+
+company
+
+</td>
+
+<td style="text-align:right;">
+
+90133
+
+</td>
+
+<td style="text-align:right;">
+
+94.37
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+As 94.37% of the values from `company` are missing we decided to also
+exclude this from the model. Finally, we also decided to omit `agent`
+from the model **MORE ON REASONING**
+
+Having chosen our predictors, we then plotted the distributions of the
+numeric features and separated classes by colour (blue for canceled,
+orange for not canceled). Many of the distributions are right skewed as
+they are dominated by 0 values. This may mean many of these numeric
+features may not be good predictors of the targets. A few numeric
+features that looked promising for prediction are
+`total_of_special_requests`, `required_car_parking_spaces`,
+`stay_in_week_nights` and `stay_in_weekend_nights` as they have wider
+distributions. The results for the numeric feature distributions are
+presented in Figure 1.
+
+<div class="figure">
+
+<img src="../results/numeric_vs_target.svg" alt="Figure 1. Comparison of the numeric distributions of training data predictors between canceled and not canceled bookings." width="100%" />
+
+<p class="caption">
+
+Figure 1. Comparison of the numeric distributions of training data
+predictors between canceled and not canceled bookings.
+
+</p>
+
+</div>
+
+We then decided to look at the categorical features of the dataset to
+visualize the differences between classes. To do this, we plotted a 2D
+heatmap of every categorical variable counting the number of
+observations for each. A categorical feature with visible differences in
+the heatmap between canceled and not canceled could be good predictors
+for the model. We find that in particular, `hotel`, `market_segment`,
+`reserved_room_type` and `customer_type` could be viable useful
+predictors. The results for the categorical heatmaps are presented in
+Figure 2.
+
+<div class="figure">
+
+<img src="../results/cat_vs_target.svg" alt="Figure 2. Comparison of the categorical features of training data predictors between canceled and not canceled bookings." width="100%" />
+
+<p class="caption">
+
+Figure 2. Comparison of the categorical features of training data
+predictors between canceled and not canceled bookings.
+
+</p>
+
+</div>
+
+### Model Results
+
+We compared a few classification model algorithms using a 5 fold
+cross-validation. Models were scored on the f1 metric. The results of
+the cross-validation scores are presented in Table 2. Compared to the
+baseline Dummy Classifier all models scored much higher. Random Forest
+scored the highest validation f1 score followed by Decision Tree.
+However, the fit time of Random Forest was much longer than that of
+Decision Tree.
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+
+<caption>
+
+Table 2. 5 fold Cross validation scores of classifier models
 
 </caption>
 
@@ -126,42 +359,6 @@ validation\_f1
 <th style="text-align:right;">
 
 train\_f1
-
-</th>
-
-<th style="text-align:right;">
-
-validation\_precision
-
-</th>
-
-<th style="text-align:right;">
-
-train\_precision
-
-</th>
-
-<th style="text-align:right;">
-
-validation\_recall
-
-</th>
-
-<th style="text-align:right;">
-
-train\_recall
-
-</th>
-
-<th style="text-align:right;">
-
-validation\_accuracy
-
-</th>
-
-<th style="text-align:right;">
-
-train\_accuracy
 
 </th>
 
@@ -203,42 +400,6 @@ Dummy Classifier
 
 </td>
 
-<td style="text-align:right;">
-
-0.3717293
-
-</td>
-
-<td style="text-align:right;">
-
-0.3714800
-
-</td>
-
-<td style="text-align:right;">
-
-0.3695377
-
-</td>
-
-<td style="text-align:right;">
-
-0.3727114
-
-</td>
-
-<td style="text-align:right;">
-
-0.5342261
-
-</td>
-
-<td style="text-align:right;">
-
-0.5331634
-
-</td>
-
 </tr>
 
 <tr>
@@ -270,42 +431,6 @@ Decision Tree
 <td style="text-align:right;">
 
 0.9945951
-
-</td>
-
-<td style="text-align:right;">
-
-0.7912478
-
-</td>
-
-<td style="text-align:right;">
-
-0.9963554
-
-</td>
-
-<td style="text-align:right;">
-
-0.7969927
-
-</td>
-
-<td style="text-align:right;">
-
-0.9928414
-
-</td>
-
-<td style="text-align:right;">
-
-0.8466057
-
-</td>
-
-<td style="text-align:right;">
-
-0.9959953
 
 </td>
 
@@ -343,42 +468,6 @@ k\_Nearest\_Neighbor
 
 </td>
 
-<td style="text-align:right;">
-
-0.7719782
-
-</td>
-
-<td style="text-align:right;">
-
-0.8904962
-
-</td>
-
-<td style="text-align:right;">
-
-0.7573279
-
-</td>
-
-<td style="text-align:right;">
-
-0.8643538
-
-</td>
-
-<td style="text-align:right;">
-
-0.8268909
-
-</td>
-
-<td style="text-align:right;">
-
-0.9102102
-
-</td>
-
 </tr>
 
 <tr>
@@ -410,42 +499,6 @@ SVC (RBF kernel)
 <td style="text-align:right;">
 
 0.8047185
-
-</td>
-
-<td style="text-align:right;">
-
-0.8567910
-
-</td>
-
-<td style="text-align:right;">
-
-0.8699969
-
-</td>
-
-<td style="text-align:right;">
-
-0.7338842
-
-</td>
-
-<td style="text-align:right;">
-
-0.7485542
-
-</td>
-
-<td style="text-align:right;">
-
-0.8557040
-
-</td>
-
-<td style="text-align:right;">
-
-0.8651688
 
 </td>
 
@@ -483,42 +536,6 @@ Logistic Regression
 
 </td>
 
-<td style="text-align:right;">
-
-0.8088454
-
-</td>
-
-<td style="text-align:right;">
-
-0.8106400
-
-</td>
-
-<td style="text-align:right;">
-
-0.6500125
-
-</td>
-
-<td style="text-align:right;">
-
-0.6518252
-
-</td>
-
-<td style="text-align:right;">
-
-0.8130915
-
-</td>
-
-<td style="text-align:right;">
-
-0.8142746
-
-</td>
-
 </tr>
 
 <tr>
@@ -553,47 +570,15 @@ Random Forest
 
 </td>
 
-<td style="text-align:right;">
-
-0.8868588
-
-</td>
-
-<td style="text-align:right;">
-
-0.9957379
-
-</td>
-
-<td style="text-align:right;">
-
-0.7879086
-
-</td>
-
-<td style="text-align:right;">
-
-0.9934198
-
-</td>
-
-<td style="text-align:right;">
-
-0.8839622
-
-</td>
-
-<td style="text-align:right;">
-
-0.9959796
-
-</td>
-
 </tr>
 
 </tbody>
 
 </table>
+
+As Random Forest classifier scored the highest f1 validation score we
+decided to use it as our classification model for the dataset. The next
+step we took was to run hyperparameter optimization on the model.
 
 # References
 

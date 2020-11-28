@@ -28,13 +28,13 @@ Created: 11/27/2020
 
 The hospitality industry and hotels in particular suffer huge revenue losses due to booking cancellations and no shows. The revenue lost becomes a sunk cost when there is not enough time to book the room again before the date of stay [@xie2007service]. Hotels would like to get an estimate if a booking is likely to be cancelled as predicting cancellations is useful for a hotel's revenue management.
 
-Here we ask if we can use a machine learning algorithm to predict whether a given hotel booking is likely to be cancelled. Finding the conditions on which a booking is likely to be cancelled can help a hotel improve the conditions and limit the number of cancellations they receive, thereby increasing their revenue. If a booking is likely to be cancelled a hotel may also wish to implement higher cancellation fees to make up some of the lost revenue [@chen2011search]. If a machine learning algothrithm can accurately predict if a hotel booking will be cancelled it could help hotels make up some of their lost revenue and potentially find ways in which to improve customer satisfaction.
+Here we ask if we can use a machine learning algorithm to predict whether a given hotel booking is likely to be canceled. Finding the conditions on which a booking is likely to be canceled can help a hotel improve the conditions and limit the number of cancellations they receive, thereby increasing their revenue. If a booking is likely to be canceled a hotel may also wish to implement higher cancellation fees to make up some of the lost revenue [@chen2011search]. If a machine learning algothrithm can accurately predict if a hotel booking will be canceled it could help hotels make up some of their lost revenue and potentially find ways in which to improve customer satisfaction.
 
 # Methods
 
 ## Data
 
-The data set used in this project comes from the Hotel Booking demand datasets from Antonio, Almeida and Nunes at Instituto Universitário de Lisboa (ISCTE-IUL), Lisbon, Portugal [@antonio2019hotel]. The data was sourced directly from the Github Repository [here](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-02-11). The dataset contains real world data obtained from two hotels; one resort hotel and one city hotel. Each row represents an individual hotel booking due to arrive between July 1st, 2015 and August 31st, 2017. There are 31 columns describing 40,060 observations from the resort hotel and 79,330 observations from the city hotel totalling 119,390 bookings.
+The data set used in this project comes from the Hotel Booking demand datasets from Antonio, Almeida and Nunes at Instituto Universitário de Lisboa (ISCTE-IUL), Lisbon, Portugal [@antonio2019hotel]. The data was sourced directly from the Github Repository [here](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-02-11). The dataset contains real world data obtained from two hotels; one resort hotel and one city hotel. Each row represents an individual hotel booking due to arrive between July 1st, 2015 and August 31st, 2017. There are 31 columns describing 40,060 observations from the resort hotel and 79,330 observations from the city hotel totaling 119,390 bookings.
 
 ## Analysis
 
@@ -46,12 +46,56 @@ The Python programming language [@Python] and the following Python packages were
 
 # Results & Discussion
 
+### Exploratory Data Analysis
+
+In our investigation of the dataset we sought to understand which features might be useful for prediction. Reading about the data collected we immediately decided that the columns `reservation_status` and `reservation_status_date` should be omitted from the model as they contain information after the prediction target and thus would not be useful. After establishing that there was a class imbalance between we checked to see if the dataset was "complete" (ie. if the dataset was missing values). The results of the missing values are presented in Table 1.
+
+
 ```{r, echo=FALSE, warning= FALSE, message=FALSE}
 
-df <- read_csv('../reports/five_fold_cross_validation_result.csv')
+missing_nums_df <- read_csv('../results/missing_summary.csv')
 
-kable(df, caption = "Table 1. A table that I have inserted") %>%
+kable(missing_nums_df,
+      caption = "Table 1. Predictors with missing values, number of values missing and percentage of values missing") %>%
   kable_styling(full_width = FALSE) 
 ```
+
+
+As 94.37% of the values from `company` are missing we decided to also exclude this from the model. Finally, we also decided to omit `agent` from the model **MORE ON REASONING**
+
+Having chosen our predictors, we then plotted the distributions of the numeric features and separated classes by colour (blue for canceled, orange for not canceled). Many of the distributions are right skewed as they are dominated by 0 values. This may mean many of these numeric features may not be good predictors of the targets. A few numeric features that looked promising for prediction are `total_of_special_requests`, `required_car_parking_spaces`, `stay_in_week_nights` and `stay_in_weekend_nights` as they have wider distributions. The results for the numeric feature distributions are presented in Figure 1.
+
+```{r , echo=FALSE, warning= FALSE, message=FALSE, fig.cap="Figure 1. Comparison of the numeric distributions of training data predictors between canceled and not canceled bookings.", out.width = '100%'}
+
+knitr::include_graphics("../results/numeric_vs_target.svg")
+
+```
+
+We then decided to look at the categorical features of the dataset to visualize the differences between classes. To do this, we plotted a 2D heatmap of every categorical variable counting the number of observations for each. A categorical feature with visible differences in the heatmap between canceled and not canceled could be good predictors for the model. We find that in particular, `hotel`, `market_segment`, `reserved_room_type` and `customer_type` could be viable useful predictors. The results for the categorical heatmaps are presented in Figure 2.
+
+
+```{r , echo=FALSE, warning= FALSE, message=FALSE, fig.cap="Figure 2. Comparison of the categorical features of training data predictors between canceled and not canceled bookings.", out.width = '100%'}
+
+knitr::include_graphics("../results/cat_vs_target.svg")
+
+```
+
+
+### Model Results
+
+We compared a few classification model algorithms using a 5 fold cross-validation. Models were scored on the f1 metric. The results of the cross-validation scores are presented in Table 2. Compared to the baseline Dummy Classifier all models scored much higher. Random Forest scored the highest validation f1 score followed by Decision Tree. However, the fit time of Random Forest was much longer than that of Decision Tree.
+
+```{r, echo=FALSE, warning= FALSE, message=FALSE}
+
+model_cv_df <- read_csv('../reports/five_fold_cross_validation_result.csv')
+
+kable(model_cv_df %>%  select(classifier_name, fit_time, score_time, validation_f1, train_f1), 
+      caption = "Table 2. 5 fold Cross validation scores of classifier models") %>%
+  kable_styling(full_width = FALSE) 
+```
+
+As Random Forest classifier scored the highest f1 validation score we decided to use it as our classification model for the dataset. The next step we took was to run hyperparameter optimization on the model. 
+
+
 
 # References
