@@ -23,7 +23,7 @@ import pickle
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.compose import ColumnTransformer, make_column_transformer
 from sklearn.impute import SimpleImputer
-from helper_functions import summarize_cv_scores, get_feature_lists
+from helper_functions import summarize_cv_scores, get_feature_lists, get_hyperparameter_grid
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, cross_validate
 from sklearn.tree import DecisionTreeClassifier
@@ -45,7 +45,6 @@ def main(
     verbose,
 ):
 
-    model_selected = "random_forest"
     assert model_selected in [
         "decision_tree",
         "knn",
@@ -153,10 +152,7 @@ def main(
 
     model_pipe = make_pipeline(preprocessor, models[model_selected])
 
-    param_grid = {
-        "randomforestclassifier__n_estimators": np.arange(500, 1001, 100),
-        "randomforestclassifier__min_samples_split": np.arange(4, 11),
-    }
+    param_grid = get_hyperparameter_grid(model_selected)
 
     if verbose:
         verbose_level=10
