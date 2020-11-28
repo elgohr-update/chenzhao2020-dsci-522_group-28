@@ -23,10 +23,7 @@ The final report can be found
 
 ## Usage
 
-To replicate the analysis, clone this GitHub repository, install the
-[dependencies](#dependencies) listed below, and run the following
-commands at the command line/terminal from the root directory of this
-project:
+To replicate the analysis, clone this GitHub repository, install the [dependencies](#dependencies) listed below, and run the [runall.sh](https://github.com/UBC-MDS/dsci-522_group-28/blob/main/runall.sh) file or run the following commands at the command line/terminal from the root directory of this project:
 
 
 ```bash
@@ -69,7 +66,7 @@ Rscript -e "rmarkdown::render('doc/hotel_cancellation_predict_report.Rmd')"
       - matplotlib==3.3.3
       - selenium = 3.141.0
       - python-chromedriver-binary = 87.0.4280.20.0
-    - R==4.0.3
+  - R==4.0.3
       - Knitr==1.29
       - KableExtra==1.3.1
       - tidyverse==1.3.0
