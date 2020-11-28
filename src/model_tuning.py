@@ -203,6 +203,3 @@ if __name__ == "__main__":
         opt["--chosen_seed"],
         opt["--verbose"],
     )
-
-
-# python src/model_tuning.py data/processed/train_df.csv results/ random_forest --n_iter=10 --n_cv_folds=5 --chosen_seed=2020 --verbose=True

@@ -10,7 +10,7 @@ Usage: classifier_evaluation.py <train_data_file> <report_file> [--n_cv_folds=<n
 Options:
 <train_data_file>               Relative path to training data file
 <report_file>                   Relative path to cross validation report file
-[--n_cv_folds=<n_cv_folds>]     Number of cross validation folds to be used [Optional, default = 2]
+[--n_cv_folds=<n_cv_folds>]     Number of cross validation folds to be used [Optional, default = 5]
 [--chosen_seed=<chosen_seed>]   Seed value to be used [Optional, default = 1]
 [--verbose=<verbose>]           Prints out message if True [Optional, default = False]
 """
@@ -35,7 +35,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 
-from helper_functions import summarize_cv_scores
+from helper_functions import summarize_cv_scores, get_feature_lists
 
 opt = docopt(__doc__)
 
@@ -64,7 +64,7 @@ def main(train_data_file, report_file, n_cv_folds, chosen_seed, verbose):
 
     try:
         if n_cv_folds is None:
-            n_cv_folds = 2
+            n_cv_folds = 5
         else:
             n_cv_folds = int(n_cv_folds)
     except ValueError as vx:
@@ -82,44 +82,14 @@ def main(train_data_file, report_file, n_cv_folds, chosen_seed, verbose):
         print("Training Data Imported...")
     X_train, y_train = train_df.drop(columns=["is_canceled"]), train_df["is_canceled"]
 
-    numeric_features_general = [
-        "lead_time",
-        "stays_in_weekend_nights",
-        "stays_in_week_nights",
-        "adults",
-        "previous_cancellations",
-        "previous_bookings_not_canceled",
-        "booking_changes",
-        "days_in_waiting_list",
-        "adr",
-        "required_car_parking_spaces",
-        "total_of_special_requests",
-        "arrival_date_year",
-        "arrival_date_week_number",
-        "arrival_date_day_of_month",
-    ]
-    numeric_features_special = [
-        "children",
-        "babies",
-    ]
-    categorical_features_general = [
-        "hotel",
-        "arrival_date_month",
-        "meal",
-        "market_segment",
-        "distribution_channel",
-        "reserved_room_type",
-        "deposit_type",
-        "customer_type",
-    ]
-    categorical_features_special = ["country"]
-    drop_features = [
-        "company",
-        "reservation_status",
-        "reservation_status_date",
-        "agent",
-    ]
-    binary_features = ["is_repeated_guest"]
+    (
+        numeric_features_general,
+        numeric_features_special,
+        categorical_features_general,
+        categorical_features_special,
+        drop_features,
+        binary_features,
+    ) = get_feature_lists()
 
     numeric_pipeline_general = make_pipeline(
         SimpleImputer(strategy="median"), StandardScaler()
@@ -163,12 +133,12 @@ def main(train_data_file, report_file, n_cv_folds, chosen_seed, verbose):
     models = {
         "Decision Tree": DecisionTreeClassifier(random_state=chosen_seed),
         # "Naive-Bayes": MultinomialNB(),
-        "k_Nearest_Neighbor": KNeighborsClassifier(n_jobs=-1, n_neighbors = 3),
+        "k_Nearest_Neighbor": KNeighborsClassifier(n_jobs=-1, n_neighbors=3),
         "SVC (RBF kernel)": SVC(random_state=chosen_seed),
         "Logistic Regression": LogisticRegression(
             random_state=chosen_seed, max_iter=1000, n_jobs=-1
         ),
-        "Random Forest": RandomForestClassifier(n_jobs=-1, random_state=chosen_seed)
+        "Random Forest": RandomForestClassifier(n_jobs=-1, random_state=chosen_seed),
     }
 
     for m in models:
