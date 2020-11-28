@@ -49,6 +49,11 @@ project:
       - altair==4.1.0
       - altair_saver==0.1.0
       - numpy==1.19.4
+      - pickle==4.0
+      - matplotlib==3.3.3
+      - selenium = 3.141.0
+      - python-chromedriver-binary = 87.0.4280.20.0
+      - R==4.0.3
 
 ## License
 

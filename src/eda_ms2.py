@@ -5,7 +5,7 @@
 (from https://www.sciencedirect.com/science/article/pii/S2352340918315191#f0010). Saves the results 
 as csv and svg files.
 
-Usage: src/eda_ms2.py --train=<train_data_file> --out_dir=<report_file>
+Usage: eda_ms2.py --train=<train_data_file> --out_dir=<report_file>
 
 Options:
 --train=<train_data_file>     Path (including filename) to training data (which needs to be saved as an csv file)
