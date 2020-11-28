@@ -15,6 +15,54 @@ Options:
 import pandas as pd
 import numpy as np
 
+def get_feature_lists():
+    """This is a static function to DRY our code for feature categorization
+
+    Returns
+    -------
+    A tuple of lists of feature types with feature names in them.
+        numeric_features_general, 
+        numeric_features_special, 
+        categorical_features_general, 
+        categorical_features_special, 
+        drop_features, binary_features
+
+    Examples
+    --------
+    >>> get_feature_lists()
+    """
+    numeric_features_general = [
+        "lead_time",
+        "stays_in_weekend_nights",
+        "stays_in_week_nights",
+        "adults",
+        "previous_cancellations",
+        "previous_bookings_not_canceled",
+        "booking_changes",
+        "days_in_waiting_list",
+        "adr",
+        "required_car_parking_spaces",
+        "total_of_special_requests",
+        "arrival_date_year",
+        "arrival_date_week_number",
+        "arrival_date_day_of_month",
+    ]
+    numeric_features_special = ["children", "babies",]
+    categorical_features_general = [
+        "hotel",
+        "arrival_date_month",
+        "meal",
+        "market_segment",
+        "distribution_channel",
+        "reserved_room_type",
+        "deposit_type",
+        "customer_type",
+    ]
+    categorical_features_special = ["country"]
+    drop_features = ["company", "reservation_status", "reservation_status_date", "agent"]
+    binary_features = ["is_repeated_guest"]
+    return numeric_features_general, numeric_features_special, categorical_features_general, categorical_features_special, drop_features, binary_features
+
 def summarize_cv_scores(X, classifier_name):
 
     """Formats the output of cross_validate function from sklearn.model_selection

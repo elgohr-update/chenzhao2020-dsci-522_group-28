@@ -183,8 +183,11 @@ def main(
     cv_scores = pd.DataFrame(random_search.cv_results_)
     cv_scores.to_csv(f"{report_path}{model_selected}_tuning_result.csv", index=False)
 
+    final_model = random_search.best_estimator_
+    final_model.fit(X_train, y_train)
+
     pickle.dump(
-        random_search.best_estimator_,
+        final_model,
         open(f"{report_path}{model_selected}_model.sav", "wb"),
     )
 
@@ -202,4 +205,4 @@ if __name__ == "__main__":
     )
 
 
-# python src/model_tuning.py data/processed/train_df.csv results/ random_forest --n_iter=10 --n_cv_folds=5 --chosen_seed=2020 --verbose=False
+# python src/model_tuning.py data/processed/train_df.csv results/ random_forest --n_iter=10 --n_cv_folds=5 --chosen_seed=2020 --verbose=True
