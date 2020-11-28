@@ -16,7 +16,7 @@ The data set used in this project comes from the Hotel Booking demand datasets f
 ## Reports
 
 The EDA report can be found
-[here](https://github.com/UBC-MDS/dsci-522_group-28/blob/main/src/hotels_data_preliminary_analysis_eda.ipynb).
+[here](https://github.com/UBC-MDS/dsci-522_group-28/blob/main/doc/hotels_data_preliminary_analysis_eda.ipynb).
 
 The final report can be found
 [here](https://github.com/UBC-MDS/dsci-522_group-28/blob/main/doc/hotel_cancellation_predict_report.md).
