@@ -23,6 +23,19 @@ Created: 11/27/2020
 
 # Summary
 
+Here we attempt to build a classification model to predict whether a
+given hotel booking is likely to be canceled. A model was selected by
+comparing many classification algorithims and selecting the best one as
+the Random Forest classification algorithm. From there, hyperparameter
+optimization was performed and the best resulting model was selected.
+Our final model was scored using f1 metric on the test data and received
+a 0.835 compared to the train data f1 score of 0.983. The model
+incorrectly predicted 11.4% of the test bookings and suggests that the
+final model has been overfit. The model as it is may help hotels with
+their revenue management however we recommend continued improvement of
+the model and further feature examination/engineering to reduce
+overfitting and improve test score.
+
 # Introduction
 
 The hospitality industry and hotels in particular suffer huge revenue
@@ -85,6 +98,10 @@ following Python packages were used to perform the analysis: docopt
 et al. 2011), altair (VanderPlas et al. 2018), numpy (Harris et al.
 2020). The code used to perform the analysis and create this report can
 be found here: <https://github.com/UBC-MDS/dsci-522_group-28>
+
+This report was created using the R programming language (R Core Team
+2020) and the following R packages: knitr (Xie 2014), KableExtra (Zhu
+2020), tidyverse (Wickham et al. 2019).
 
 # Results & Discussion
 
@@ -261,7 +278,15 @@ company
 
 As 94.37% of the values from `company` are missing we decided to also
 exclude this from the model. Finally, we also decided to omit `agent`
-from the model **MORE ON REASONING**
+from the model as we determined there was not enough information about
+the predictor. As we see in Table 1, almost 14% of training data does
+not have a value for `agent`. The predictor is assigned a numeric value
+but we are not sure how the id’s are assigned or specific per hotel. We
+also observed that 115 out of 324 `agent` ids have less than 10
+observations and 247 out of 324 `agent` ids have less than 100
+observations. We also observe that 2 ids have over 10,000 observations
+corresponding to specific hotels suggesting a correlation however, we
+did not think for these reasons `agent` would be a good predictor.
 
 Having chosen our predictors, we then plotted the distributions of the
 numeric features and separated classes by colour (blue for canceled,
@@ -378,13 +403,13 @@ Dummy Classifier
 
 <td style="text-align:right;">
 
-0.0193955
+0.0173055
 
 </td>
 
 <td style="text-align:right;">
 
-0.0223241
+0.0230441
 
 </td>
 
@@ -412,13 +437,13 @@ Decision Tree
 
 <td style="text-align:right;">
 
-19.0155343
+17.2294734
 
 </td>
 
 <td style="text-align:right;">
 
-0.0980628
+0.0901294
 
 </td>
 
@@ -446,13 +471,13 @@ k\_Nearest\_Neighbor
 
 <td style="text-align:right;">
 
-17.4371542
+13.7782258
 
 </td>
 
 <td style="text-align:right;">
 
-194.6145562
+197.5482479
 
 </td>
 
@@ -480,13 +505,13 @@ SVC (RBF kernel)
 
 <td style="text-align:right;">
 
-506.2891913
+533.7971420
 
 </td>
 
 <td style="text-align:right;">
 
-61.0231221
+57.3568261
 
 </td>
 
@@ -514,13 +539,13 @@ Logistic Regression
 
 <td style="text-align:right;">
 
-14.0690587
+15.3228344
 
 </td>
 
 <td style="text-align:right;">
 
-0.0916533
+0.1147711
 
 </td>
 
@@ -548,13 +573,13 @@ Random Forest
 
 <td style="text-align:right;">
 
-129.4666012
+144.2220199
 
 </td>
 
 <td style="text-align:right;">
 
-0.7805111
+0.8293702
 
 </td>
 
@@ -578,7 +603,272 @@ Random Forest
 
 As Random Forest classifier scored the highest f1 validation score we
 decided to use it as our classification model for the dataset. The next
-step we took was to run hyperparameter optimization on the model.
+step we took was to run hyperparameter optimization on the model. The
+hyperparameters optimized from Random Forest were `n_estimators` and
+`min_sample_split`. The best model from hyperparameter optimization had
+hyperparameters of `n_estimators = 700` and `min_sample_split = 4` as
+seen in Table 3. Table 3 only includes the top 4 results of the
+hyperparameter optimization to show comparision with other searches. The
+differences in mean test score is very little between the top 3 results
+indicating the hyperparameters may not change the models drastically.
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+
+<caption>
+
+Table 3. Results of Hyperparameter Optimization for Random Forest
+Classifer
+
+</caption>
+
+<thead>
+
+<tr>
+
+<th style="text-align:right;">
+
+rank\_test\_score
+
+</th>
+
+<th style="text-align:right;">
+
+n\_estimators
+
+</th>
+
+<th style="text-align:right;">
+
+min\_samples\_split
+
+</th>
+
+<th style="text-align:right;">
+
+mean\_test\_score
+
+</th>
+
+<th style="text-align:right;">
+
+mean\_train\_score
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+<td style="text-align:right;">
+
+700
+
+</td>
+
+<td style="text-align:right;">
+
+4
+
+</td>
+
+<td style="text-align:right;">
+
+0.8343808
+
+</td>
+
+<td style="text-align:right;">
+
+0.9833649
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+900
+
+</td>
+
+<td style="text-align:right;">
+
+4
+
+</td>
+
+<td style="text-align:right;">
+
+0.8343086
+
+</td>
+
+<td style="text-align:right;">
+
+0.9835418
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+500
+
+</td>
+
+<td style="text-align:right;">
+
+4
+
+</td>
+
+<td style="text-align:right;">
+
+0.8340031
+
+</td>
+
+<td style="text-align:right;">
+
+0.9832270
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:right;">
+
+4
+
+</td>
+
+<td style="text-align:right;">
+
+1000
+
+</td>
+
+<td style="text-align:right;">
+
+6
+
+</td>
+
+<td style="text-align:right;">
+
+0.8314456
+
+</td>
+
+<td style="text-align:right;">
+
+0.9620985
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+Having chosen our hyperparameters, we fit our final model to the train
+data and score it on the test data. The model scores an f1 score of
+0.835 on the test data and a 0.983 f1 score on the training data. While,
+the results for the test data scores high, because the score for the
+training data is much higher, we acknowledge the model in its current
+state has been overfit to the training data. Overfitting can create
+problems for model deployment so the model will need to be reassessed
+before it can be released for use among hotels. About 11.4% of the test
+data has been incorrectly predicted and we are hopeful our model could
+be improved to decrease this number.
+
+<div class="figure">
+
+<img src="../results/random_forest_confusion_matrix_test_data.png" alt="Figure 3. Confusion matrix of model performance on test data." width="50%" />
+
+<p class="caption">
+
+Figure 3. Confusion matrix of model performance on test data.
+
+</p>
+
+</div>
+
+To further show the overfitting of the model, we compared the confusion
+matrix from the test data (Figure 3) and the confusion matrix from the
+train data (Figure 4). The confusion matrix of the train data scores
+much better than that of the confusion matrix of the test data. We would
+ideally hope for these ratios to be similar.
+
+<div class="figure">
+
+<img src="../results/random_forest_confusion_matrix_train_data.png" alt="Figure 4. Confusion matrix of model performance on train data." width="50%" />
+
+<p class="caption">
+
+Figure 4. Confusion matrix of model performance on train data.
+
+</p>
+
+</div>
+
+Some limitations from this model could come from the dataset, there is
+only data contained from 2 hotels which could limit the scope of
+bookings from other hotels. Another limitation could be from using the
+classifier model Random Forest, while it had a good metric score it does
+come with high variance, another classification model may perform better
+on the test data and have the additional benefit of reduced fit time.
+Furthermore, one final limitation of the model can be due to human
+behaviour, unpredictable occurrences could happen to anyone and cause
+circumstances to change, quantifying this as an expected error could e
+beneficial to indicate whether our model is within a good prediction
+range.
+
+To improve this model, we propose further hyperparameter tuning with a
+wider range of numbers. This requires more time as running
+hyperparameter tuning with Random Forest is computationally expensive.
+Additionally, we suggest incorporating some feature engineering into the
+model to address if more features should be dropped. While understanding
+which features are important for hotels to reduce the number of
+cancellations, some of the predictors may not be useful and may be
+causing the model to learn unimportant factors.Furthermore, the issue of
+overfitting as mentioned above must be addressed so as not to have a
+model that has learned specific patterns. However, with our current
+model as there is not much drawback for a hotel in a wrong booking
+prediction, they may wish to use this model to get an understanding of a
+booking. There should be note, as mentioned above, that this model does
+not have a perfect prediction and predicted outcomes should not be
+solely relyed upon.
 
 # References
 
@@ -633,6 +923,14 @@ Python.” *Journal of Machine Learning Research* 12: 2825–30.
 
 </div>
 
+<div id="ref-R">
+
+R Core Team. 2020. *R: A Language and Environment for Statistical
+Computing*. Vienna, Austria: R Foundation for Statistical Computing.
+<https://www.R-project.org/>.
+
+</div>
+
 <div id="ref-pandas">
 
 team, The pandas development. 2020. *Pandas-Dev/Pandas: Pandas* (version
@@ -657,10 +955,35 @@ Scotts Valley, CA: CreateSpace.
 
 </div>
 
+<div id="ref-tidyverse">
+
+Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy
+D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019.
+“Welcome to the tidyverse.” *Journal of Open Source Software* 4 (43):
+1686. <https://doi.org/10.21105/joss.01686>.
+
+</div>
+
 <div id="ref-xie2007service">
 
 Xie, Jinhong, and Eitan Gerstner. 2007. “Service Escape: Profiting from
 Customer Cancellations.” *Marketing Science* 26 (1): 18–30.
+
+</div>
+
+<div id="ref-knitr">
+
+Xie, Yihui. 2014. “Knitr: A Comprehensive Tool for Reproducible Research
+in R.” In *Implementing Reproducible Computational Research*, edited by
+Victoria Stodden, Friedrich Leisch, and Roger D. Peng. Chapman;
+Hall/CRC. <http://www.crcpress.com/product/isbn/9781466561595>.
+
+</div>
+
+<div id="ref-Kable">
+
+Zhu, Hao. 2020. *KableExtra: Construct Complex Table with ’Kable’ and
+Pipe Syntax*. <https://CRAN.R-project.org/package=kableExtra>.
 
 </div>
 

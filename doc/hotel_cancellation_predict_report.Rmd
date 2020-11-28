@@ -24,6 +24,10 @@ Created: 11/27/2020
 
 # Summary
 
+
+Here we attempt to build a classification model to predict whether a given hotel booking is likely to be canceled. A model was selected by comparing many classification algorithims and selecting the best one as the Random Forest classification algorithm. From there, hyperparameter optimization was performed and the best resulting model was selected.  Our final model was scored using f1 metric on the test data and received a 0.835 compared to the train data f1 score of 0.983. The model incorrectly predicted 11.4% of the test bookings and suggests that the final model has been overfit. The model as it is may help hotels with their revenue management however we recommend continued improvement of the model and further feature examination/engineering to reduce overfitting and improve test score.
+
+
 # Introduction
 
 The hospitality industry and hotels in particular suffer huge revenue losses due to booking cancellations and no shows. The revenue lost becomes a sunk cost when there is not enough time to book the room again before the date of stay [@xie2007service]. Hotels would like to get an estimate if a booking is likely to be cancelled as predicting cancellations is useful for a hotel's revenue management.
@@ -44,6 +48,8 @@ From there, Random Forest was chosen as the classification model and hyperparame
 
 The Python programming language [@Python] and the following Python packages were used to perform the analysis: docopt [@docoptpython], pandas [@pandaspaper; @pandas], sklearn [@scikit-learn], altair [@altair], numpy [@numpy]. The code used to perform the analysis and create this report can be found here: <https://github.com/UBC-MDS/dsci-522_group-28>
 
+This report was created using the R programming language [@R] and the following R packages: knitr [@knitr], KableExtra [@Kable], tidyverse [@tidyverse].
+
 # Results & Discussion
 
 ### Exploratory Data Analysis
@@ -61,7 +67,8 @@ kable(missing_nums_df,
 ```
 
 
-As 94.37% of the values from `company` are missing we decided to also exclude this from the model. Finally, we also decided to omit `agent` from the model **MORE ON REASONING**
+As 94.37% of the values from `company` are missing we decided to also exclude this from the model. Finally, we also decided to omit `agent` from the model as we determined there was not enough information about the predictor. As we see in Table 1, almost 14% of training data does not have a value for `agent`. The predictor is assigned a numeric value but we are not sure how the id's are assigned or specific per hotel. We also observed that 115 out of 324 `agent` ids have less than 10 observations and 247 out of 324 `agent` ids have less than 100 observations. We also observe that 2 ids have over 10,000 observations corresponding to specific hotels suggesting a correlation however, we did not think for these reasons `agent` would be a good predictor.
+
 
 Having chosen our predictors, we then plotted the distributions of the numeric features and separated classes by colour (blue for canceled, orange for not canceled). Many of the distributions are right skewed as they are dominated by 0 values. This may mean many of these numeric features may not be good predictors of the targets. A few numeric features that looked promising for prediction are `total_of_special_requests`, `required_car_parking_spaces`, `stay_in_week_nights` and `stay_in_weekend_nights` as they have wider distributions. The results for the numeric feature distributions are presented in Figure 1.
 
@@ -87,15 +94,51 @@ We compared a few classification model algorithms using a 5 fold cross-validatio
 
 ```{r, echo=FALSE, warning= FALSE, message=FALSE}
 
-model_cv_df <- read_csv('../reports/five_fold_cross_validation_result.csv')
+model_cv_df <- read_csv('../results/five_fold_cross_validation_result.csv')
 
 kable(model_cv_df %>%  select(classifier_name, fit_time, score_time, validation_f1, train_f1), 
       caption = "Table 2. 5 fold Cross validation scores of classifier models") %>%
   kable_styling(full_width = FALSE) 
 ```
 
-As Random Forest classifier scored the highest f1 validation score we decided to use it as our classification model for the dataset. The next step we took was to run hyperparameter optimization on the model. 
+As Random Forest classifier scored the highest f1 validation score we decided to use it as our classification model for the dataset. The next step we took was to run hyperparameter optimization on the model. The hyperparameters optimized from Random Forest were `n_estimators` and `min_sample_split`. The best model from hyperparameter optimization had hyperparameters of `n_estimators = 700` and `min_sample_split = 4` as seen in Table 3. Table 3 only includes the top 4 results of the hyperparameter optimization to show comparision with other searches. The differences in mean test score is very little between the top 3 results indicating the hyperparameters may not change the models drastically.
 
+```{r, echo=FALSE, warning= FALSE, message=FALSE}
+
+hyperparameter_df <- read_csv('../results/random_forest_tuning_result.csv')
+
+hyperparameter_df<- hyperparameter_df %>%  
+                        arrange(rank_test_score) %>% 
+                        rename(n_estimators = param_randomforestclassifier__n_estimators,
+                               min_samples_split = param_randomforestclassifier__min_samples_split) %>% 
+                        filter(rank_test_score < 5) %>% 
+                        select(rank_test_score,n_estimators,min_samples_split, mean_test_score, mean_train_score)
+
+kable(hyperparameter_df, 
+      caption = "Table 3. Results of Hyperparameter Optimization for Random Forest Classifer") %>%
+  kable_styling(full_width = FALSE) 
+```
+
+Having chosen our hyperparameters, we fit our final model to the train data and score it on the test data. The model scores an f1 score of 0.835 on the test data and a 0.983 f1 score on the training data. While, the results for the test data scores high, because the score for the training data is much higher, we acknowledge the model in its current state has been overfit to the training data. Overfitting can create problems for model deployment so the model will need to be reassessed before it can be released for use among hotels. About 11.4% of the test data has been incorrectly predicted and we are hopeful our model could be improved to decrease this number.
+
+
+```{r , echo=FALSE, warning= FALSE, message=FALSE, fig.cap="Figure 3. Confusion matrix of model performance on test data.", out.width = '50%'}
+
+knitr::include_graphics("../results/random_forest_confusion_matrix_test_data.png")
+
+```
+
+To further show the overfitting of the model, we compared the confusion matrix from the test data (Figure 3) and the confusion matrix from the train data (Figure 4). The confusion matrix of the train data scores much better than that of the confusion matrix of the test data. We would ideally hope for these ratios to be similar.
+
+```{r , echo=FALSE, warning= FALSE, message=FALSE, fig.cap="Figure 4. Confusion matrix of model performance on train data.", out.width = '50%'}
+
+knitr::include_graphics("../results/random_forest_confusion_matrix_train_data.png")
+
+```
+
+Some limitations from this model could come from the dataset, there is only data contained from 2 hotels which could limit the scope of bookings from other hotels. Another limitation could be from using the classifier model Random Forest, while it had a good metric score it does come with high variance, another classification model may perform better on the test data and have the additional benefit of reduced fit time. Furthermore, one final limitation of the model can be due to human behaviour, unpredictable occurrences could happen to anyone and cause circumstances to change, quantifying this as an expected error could e beneficial to indicate whether our model is within a good prediction range.
+
+To improve this model, we propose further hyperparameter tuning with a wider range of numbers. This requires more time as running hyperparameter tuning with Random Forest is computationally expensive. Additionally, we suggest incorporating some feature engineering into the model to address if more features should be dropped. While understanding which features are important for hotels to reduce the number of cancellations, some of the predictors may not be useful and may be causing the model to learn unimportant factors.Furthermore, the issue of overfitting as mentioned above must be addressed so as not to have a model that has learned specific patterns. However, with our current model as there is not much drawback for a hotel in a wrong booking prediction, they may wish to use this model to get an understanding of a booking. There should be note, as mentioned above, that this model does not have a perfect prediction and predicted outcomes should not be solely relyed upon.
 
 
 # References
