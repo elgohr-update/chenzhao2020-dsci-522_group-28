@@ -35,12 +35,16 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 
+# This is used to classify the features into numeric, categorical features etc
+# It is also used to format the results of cross validation
 from helper_functions import summarize_cv_scores, get_feature_lists
 
 opt = docopt(__doc__)
 
 
 def main(train_data_file, report_file, n_cv_folds, chosen_seed, verbose):
+
+    # Checks the parameter values used
 
     if verbose == "True":
         verbose = True
@@ -77,11 +81,13 @@ def main(train_data_file, report_file, n_cv_folds, chosen_seed, verbose):
         print(type(ex))
         exit(-99)
 
+    # Import training data
     train_df = pd.read_csv(train_data_file)
     if verbose:
         print("Training Data Imported...")
     X_train, y_train = train_df.drop(columns=["is_canceled"]), train_df["is_canceled"]
 
+    # Get the feature lists from helper function and build the preprocessing pipeline
     (
         numeric_features_general,
         numeric_features_special,
@@ -117,6 +123,7 @@ def main(train_data_file, report_file, n_cv_folds, chosen_seed, verbose):
         print("Preprocessor Created...")
     eval_metrics = ["f1", "precision", "recall", "accuracy"]
 
+    # Evaluating Baseline model using Dummy classifier
     model_dummy = DummyClassifier(strategy="stratified", random_state=chosen_seed)
     scores = cross_validate(
         model_dummy,
@@ -130,6 +137,7 @@ def main(train_data_file, report_file, n_cv_folds, chosen_seed, verbose):
 
     mean_scores_df = summarize_cv_scores(scores, "Dummy Classifier")
 
+    # Evaluating multiple classifiers
     models = {
         "Decision Tree": DecisionTreeClassifier(random_state=chosen_seed),
         # "Naive-Bayes": MultinomialNB(),
@@ -161,6 +169,7 @@ def main(train_data_file, report_file, n_cv_folds, chosen_seed, verbose):
     if verbose:
         print("Evaluation Complete...")
 
+    # Storing results
     mean_scores_df.to_csv(report_file, index=False)
 
     print("Report generated and saved...")

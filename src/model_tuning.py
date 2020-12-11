@@ -23,6 +23,8 @@ import pickle
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.compose import ColumnTransformer, make_column_transformer
 from sklearn.impute import SimpleImputer
+
+# helper_functions.py is used for getting feature lists, hyperparameter tuning grid and formatting the cross validation results
 from helper_functions import summarize_cv_scores, get_feature_lists, get_hyperparameter_grid
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, cross_validate
@@ -45,6 +47,7 @@ def main(
     verbose,
 ):
 
+    # Check parameter values
     assert model_selected in [
         "decision_tree",
         "knn",
@@ -103,11 +106,13 @@ def main(
         print(type(ex))
         exit(-99)
 
+    # Import training data
     train_df = pd.read_csv(train_data_file)
     if verbose:
         print("Training Data Imported...")
     X_train, y_train = train_df.drop(columns=["is_canceled"]), train_df["is_canceled"]
 
+    # Building preprocessor pipeline
     (
         numeric_features_general,
         numeric_features_special,
@@ -140,6 +145,8 @@ def main(
         (binary_pipeline, binary_features),
     )
 
+    # Below are the definitions of the models we can use for hyperparameter tuning
+    # We can use one of them at once. We are only using Random Forest for now, but plan to extend this in future
     models = {
         "decision_tree": DecisionTreeClassifier(random_state=chosen_seed),
         "knn": KNeighborsClassifier(n_jobs=-1, n_neighbors=3),
@@ -159,6 +166,7 @@ def main(
     else:
         verbose_level=0
 
+    # Hyperparameter tuning using Randomized Search
     random_search = RandomizedSearchCV(
         model_pipe,
         param_distributions=param_grid,
@@ -176,9 +184,11 @@ def main(
     print(f"Best parameter: {random_search.best_params_}")
     print(f"Best validation score: {round(random_search.best_score_, 3)}")
 
+    # Storing results
     cv_scores = pd.DataFrame(random_search.cv_results_)
     cv_scores.to_csv(f"{report_path}{model_selected}_tuning_result.csv", index=False)
 
+    # Storing the best model
     final_model = random_search.best_estimator_
     final_model.fit(X_train, y_train)
 
