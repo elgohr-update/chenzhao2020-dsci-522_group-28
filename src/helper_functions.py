@@ -21,6 +21,10 @@ def summarize_cv_scores(X, classifier_name):
     """Formats the output of cross_validate function from sklearn.model_selection
     from dictionary to pandas Dataframe
 
+    This function takes the output of cross_validate function from  sklearn.model_selection
+    as a dictionary and computes the mean of all values per key. Example, it calculates
+    mean fit time, score time etc. The result of this operation is returned as pandas Dataframe
+
     Parameters
     ----------
     X : dict
@@ -55,9 +59,13 @@ def summarize_cv_scores(X, classifier_name):
     """
 
     X_df = pd.DataFrame(X)
+
+    # Changes the column names that starts with `test` to `validation`
     col_names = (
         pd.Series(X_df.columns.tolist()).str.replace("test_", "validation_").tolist()
     )
+
+    # Calculates mean of all columns
     X_df = pd.DataFrame(X_df.mean()).T
     X_df.columns = col_names
     X_df["classifier_name"] = classifier_name
@@ -69,6 +77,9 @@ def get_hyperparameter_grid(model_name):
 
     """Provides hyperparameter grid for a model
     which can be used in Grid search or Randomized search
+
+    This function is created to keep out scripts DRY and if we have to change the
+    hyperparameter space, this is the only place we have to change them
 
     (Currently works for Random forest only. Work in progress)
 
@@ -88,6 +99,7 @@ def get_hyperparameter_grid(model_name):
     >>> get_hyperparameter_grid(toy_score, "toy_test")
     """
 
+    # Checks if the model_name parameter value is correct
     assert model_name in [
         "decision_tree",
         "knn",
@@ -96,6 +108,7 @@ def get_hyperparameter_grid(model_name):
         "random_forest",
     ], "Invalid model name..."
 
+    # Hyperparameter space for Random Forest
     if model_name == "random_forest":
         param_grid = {
             "randomforestclassifier__n_estimators": np.arange(500, 1001, 100),
@@ -108,6 +121,9 @@ def get_hyperparameter_grid(model_name):
 
 def get_feature_lists():
     """This is a static function to DRY our code for feature categorization
+
+    This is where we have defined which features to be used in the process and in what way, 
+    and if we want to change them, this is the one version of truth that we have to change
 
     Returns
     -------
@@ -171,7 +187,9 @@ def get_feature_lists():
 
 
 def main():
-
+    '''
+    Tests all the above functions with toy example
+    '''
     ###################### Test for summarize_cv_scores ###########################
 
     toy_score = {
