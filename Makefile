@@ -21,9 +21,12 @@ results/numeric_vs_target.svg results/cat_vs_target.svg results/corr_all.svg res
 	python src/eda_ms2.py --train=data/processed/train_df.csv --out_dir=results/
 
 # train model and tune hyperparameters
-# below script will take two and half hours to run!!
+
+## Below script will take approximately 40 minutes to run!!
 results/five_fold_cross_validation_result.csv : data/processed/train_df.csv src/classifier_evaluation.py src/helper_functions.py
 	python src/classifier_evaluation.py data/processed/train_df.csv results/five_fold_cross_validation_result.csv --n_cv_folds=5 --chosen_seed=2020 --verbose=True
+
+## Below script will take approximately 2 hours to run!!
 results/random_forest_model.sav results/random_forest_tuning_result.csv : data/processed/train_df.csv src/model_tuning.py src/helper_functions.py
 	python src/model_tuning.py data/processed/train_df.csv results/ random_forest --n_iter=10 --n_cv_folds=5 --chosen_seed=2020 --verbose=True
 
