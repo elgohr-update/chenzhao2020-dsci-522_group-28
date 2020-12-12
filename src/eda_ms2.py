@@ -19,15 +19,10 @@ from docopt import docopt
 
 # Visualization packages
 import altair as alt
-import chromedriver_binary
 from altair_saver import save
-from selenium import webdriver
-
-driver = webdriver.Chrome()
-
 
 # Save a vega-lite spec and a PNG blob for each plot in the notebook
-# alt.renderers.enable("mimetype")
+alt.renderers.enable("mimetype")
 # Handle large data sets without embedding them in the notebook
 alt.data_transformers.enable("data_server")
 
@@ -86,24 +81,34 @@ def main(train_data_file, report_file):
         lambda x: "Canceled" if x == 1 else "Not Canceled"
     )
 
-    train_df['stays_in_weekend_nights'].value_counts()
-    train_df_num = train_df.loc[train_df['stays_in_weekend_nights']<=10]
-    train_df_num = train_df_num.loc[train_df_num['stays_in_week_nights']<=15]
-    train_df_num = train_df_num.loc[train_df_num['lead_time']<=600]
-    train_df_num = train_df_num.loc[train_df_num['adults']<=4]
-    train_df_num = train_df_num.loc[train_df_num['children']<=3]
-    train_df_num = train_df_num.loc[train_df_num['babies']<=2]
-    train_df_num = train_df_num.loc[train_df_num['previous_cancellations']<=15]
-    train_df_num = train_df_num.loc[train_df_num['previous_bookings_not_canceled']<=15]
-    train_df_num = train_df_num.loc[train_df_num['booking_changes']<=10]
-    train_df_num = train_df_num.loc[train_df_num['days_in_waiting_list']<=20]
-    train_df_num = train_df_num.loc[train_df_num['adr']<=1000]
+    train_df["stays_in_weekend_nights"].value_counts()
+    train_df_num = train_df.loc[train_df["stays_in_weekend_nights"] <= 10]
+    train_df_num = train_df_num.loc[train_df_num["stays_in_week_nights"] <= 15]
+    train_df_num = train_df_num.loc[train_df_num["lead_time"] <= 600]
+    train_df_num = train_df_num.loc[train_df_num["adults"] <= 4]
+    train_df_num = train_df_num.loc[train_df_num["children"] <= 3]
+    train_df_num = train_df_num.loc[train_df_num["babies"] <= 2]
+    train_df_num = train_df_num.loc[train_df_num["previous_cancellations"] <= 15]
+    train_df_num = train_df_num.loc[
+        train_df_num["previous_bookings_not_canceled"] <= 15
+    ]
+    train_df_num = train_df_num.loc[train_df_num["booking_changes"] <= 10]
+    train_df_num = train_df_num.loc[train_df_num["days_in_waiting_list"] <= 20]
+    train_df_num = train_df_num.loc[train_df_num["adr"] <= 1000]
 
-    numeric_vs_target = (alt.Chart(train_df_num)
-    .mark_line(interpolate='monotone').encode(
-        alt.X(alt.repeat(), type='quantitative'),
-        alt.Y('count()', title = ""),
-        alt.Color('is_canceled_cat', title = ""))).properties(width=150, height=150).repeat(numeric_features,columns = 4)
+    numeric_vs_target = (
+        (
+            alt.Chart(train_df_num)
+            .mark_line(interpolate="monotone")
+            .encode(
+                alt.X(alt.repeat(), type="quantitative"),
+                alt.Y("count()", title=""),
+                alt.Color("is_canceled_cat", title=""),
+            )
+        )
+        .properties(width=150, height=150)
+        .repeat(numeric_features, columns=4)
+    )
 
     try:
         numeric_vs_target.save(report_file + "/" + "numeric_vs_target.svg")
@@ -115,31 +120,39 @@ def main(train_data_file, report_file):
     except Exception as ex:
         print(ex)
         print(type(ex))
-        
+
     def make_cat_graph(var):
-    	test = train_df.groupby(var).agg({'is_canceled':'mean'})
-    	test.reset_index(inplace = True)
-    	test['is_canceled'] = round(test['is_canceled'], 2)
-    	test[var] = test[var].astype(str)
+        test = train_df.groupby(var).agg({"is_canceled": "mean"})
+        test.reset_index(inplace=True)
+        test["is_canceled"] = round(test["is_canceled"], 2)
+        test[var] = test[var].astype(str)
 
-    	graph = alt.Chart(test).mark_rect().encode(
-        	alt.X(var),
-        	alt.Color("is_canceled", title="Cancel Rate"),
-    	).properties(width=300, height=200)
-    
-    	return graph+alt.Chart(test).mark_text(color = 'black').encode(alt.X(var), text = 'is_canceled')
+        graph = (
+            alt.Chart(test)
+            .mark_rect()
+            .encode(
+                alt.X(var),
+                alt.Color("is_canceled", title="Cancel Rate"),
+            )
+            .properties(width=300, height=200)
+        )
 
+        return graph + alt.Chart(test).mark_text(color="black").encode(
+            alt.X(var), text="is_canceled"
+        )
 
-    hotel = make_cat_graph('hotel')
-    meal = make_cat_graph('meal')
-    market_segment = make_cat_graph('market_segment')
-    distribution_channel = make_cat_graph('distribution_channel')
-    reserved_room_type = make_cat_graph('reserved_room_type')
-    deposit_type = make_cat_graph('deposit_type')
-    customer_type = make_cat_graph('customer_type')
-    is_repeated_guest = make_cat_graph('is_repeated_guest')
+    hotel = make_cat_graph("hotel")
+    meal = make_cat_graph("meal")
+    market_segment = make_cat_graph("market_segment")
+    distribution_channel = make_cat_graph("distribution_channel")
+    reserved_room_type = make_cat_graph("reserved_room_type")
+    deposit_type = make_cat_graph("deposit_type")
+    customer_type = make_cat_graph("customer_type")
+    is_repeated_guest = make_cat_graph("is_repeated_guest")
 
-    cat_vs_target = (hotel|meal|market_segment|distribution_channel)&(reserved_room_type|deposit_type|customer_type|is_repeated_guest)
+    cat_vs_target = (hotel | meal | market_segment | distribution_channel) & (
+        reserved_room_type | deposit_type | customer_type | is_repeated_guest
+    )
 
     try:
         cat_vs_target.save(report_file + "/" + "cat_vs_target.svg")
