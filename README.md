@@ -25,7 +25,7 @@ The final report can be found
 
 There are two recommended steps to replicate the analysis:
 
-### Using Docker
+### 1. Using Docker
 
 *note - the instructions in this section also depends on running this in a unix shell (e.g., terminal or Git Bash)*
 
@@ -39,7 +39,7 @@ There are two recommended steps to replicate the analysis:
 
 `docker run --rm -v /$(pwd):/home/dsci522_groupproject cz2020/dsci-522_group-28 make -C home/dsci522_groupproject clean`
 
-### Without using Docker
+### 2. Without using Docker
 
 1. Clone this GitHub repository
 2. Install the [dependencies](#dependencies) listed below
@@ -69,8 +69,8 @@ There are two recommended steps to replicate the analysis:
       - kableExtra==1.3.1
   - GNU make 4.3
 
-## Makefile graph
-![Makefilegraph](results/Makefile.png)
+## Makefile Dependency Diagram
+![Makefile_dependency_diagram](results/Makefile.png)
 
 ## License
 
