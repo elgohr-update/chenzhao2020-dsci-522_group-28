@@ -10,7 +10,7 @@ British Columbia.
 
 Here we attempt to build a classification model to predict whether a given hotel booking is likely to be canceled. A model was selected by comparing many classification algorithims and selecting the best one as the Random Forest classification algorithm. From there, hyperparameter optimization was performed and the best resulting model was selected. Our final model was scored using f1 metric on the test data and received a 0.835 compared to the train data f1 score of 0.983. The model incorrectly predicted 11.4% of the test bookings and suggests that the final model has been overfit. The model as it is may help hotels with their revenue management however we recommend continued improvement of the model and further feature examination/engineering to reduce overfitting and improve test score.
 
-The data set used in this project comes from the Hotel Booking demand datasets from Antonio, Almeida and Nunes at Instituto Universit�rio de Lisboa (ISCTE-IUL), Lisbon, Portugal  (Antonio, Almeida, and Nunes 2019). The data was sourced directly from the Github Repository [here](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-02-11). The dataset contains real world data obtained from two hotels; one resort hotel and one city hotel. Each row represents an individual hotel booking due to arrive between July 1st, 2015 and August 31st, 2017. There are 31 columns describing 40,060 observations from the resort hotel and 79,330 observations from the city hotel totaling 119,390 bookings.
+The data set used in this project comes from the Hotel Booking demand datasets from Antonio, Almeida and Nunes at Instituto Universitário de Lisboa (ISCTE-IUL), Lisbon, Portugal  (Antonio, Almeida, and Nunes 2019). The data was sourced directly from the Github Repository [here](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-02-11). The dataset contains real world data obtained from two hotels; one resort hotel and one city hotel. Each row represents an individual hotel booking due to arrive between July 1st, 2015 and August 31st, 2017. There are 31 columns describing 40,060 observations from the resort hotel and 79,330 observations from the city hotel totaling 119,390 bookings.
 
 
 ## Reports
@@ -23,7 +23,23 @@ The final report can be found
 
 ## Usage
 
-Steps to replicate the analysis:
+There are two recommended steps to replicate the analysis:
+
+### Using Docker
+
+*note - the instructions in this section also depends on running this in a unix shell (e.g., terminal or Git Bash)*
+
+1. Install [Docker](https://www.docker.com/get-started)
+2. Clone this GitHub repository
+3. Run the following command at the command line/terminal from the root directory of this project:
+
+`docker run --rm -v /$(pwd):/home/dsci522_groupproject cz2020/dsci-522_group-28 make -C home/dsci522_groupproject all`
+
+4. To reset the repo to a clean state, with no intermediate or results files, run the following command at the command line/terminal from the root directory of this project:
+
+`docker run --rm -v /$(pwd):/home/dsci522_groupproject cz2020/dsci-522_group-28 make -C home/dsci522_groupproject clean`
+
+### Without using Docker
 
 1. Clone this GitHub repository
 2. Install the [dependencies](#dependencies) listed below
@@ -33,25 +49,25 @@ Steps to replicate the analysis:
 
 *Please note that* 
 - *the model evaluation process and hyperparameter tuning takes approximately 40 minutes and 2 hours respectively*
+- *this is a resource intensive process and may take up most of the system resources during runtime*
 - *As part of future enhancement, we will try to evaluate XGBoost and LightGBM Classification algorithms as they tend to run faster than Random Forest. If the results are suitable, we will do hyperparameter tuning on one of them instead of Random Forest*
 
 ## Dependencies
 
-  - Python 3.8.6 and Python packages:
-      - docopt==0.6.2
-      - pandas==1.1.4
-      - sklearn==0.23.2
-      - altair==4.1.0
-      - altair_saver==0.1.0
-      - numpy==1.19.4
-      - pickle==4.0
-      - matplotlib==3.3.3
-      - selenium = 3.141.0
-      - python-chromedriver-binary = 87.0.4280.20.0
-  - R==4.0.3
-      - Knitr==1.29
-      - KableExtra==1.3.1
+  - Python 3.8.5 and Python packages:
+      - numpy=1.19.2
+      - pandas=1.1.3
+      - matplotlib=3.3.2
+      - sklearn=0.23.2
+      - altair=4.1.0
+      - altair_saver=0.5.0
+      - docopt=0.6.2
+      - pickle=4.0
+  - R 4.0.3 and R packages:
       - tidyverse==1.3.0
+      - knitr=1.30
+      - kableExtra==1.3.1
+  - GNU make 4.3
 
 ## License
 
