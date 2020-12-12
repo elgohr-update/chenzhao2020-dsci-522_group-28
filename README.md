@@ -69,6 +69,9 @@ There are two recommended steps to replicate the analysis:
       - kableExtra==1.3.1
   - GNU make 4.3
 
+## Makefile graph
+![Makefilegraph](results/Makefile.png)
+
 ## License
 
 The Hotel Booking demand dataset is an open access article distributed under the terms of the Creative Commons CC-BY license, which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.  If re-using/re-mixing please provide attribution and link to this webpage.
