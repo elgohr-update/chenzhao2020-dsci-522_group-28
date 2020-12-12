@@ -44,24 +44,6 @@ doc/hotel_cancellation_predict_report.md : doc/hotel_cancellation_predict_report
 
 clean :
 	rm -rf data/raw/hotels_dataset.csv
-	rm -rf data/processed/train_df.csv 
-	rm -rf data/processed/test_df.csv
-	rm -rf results/five_fold_cross_validation_result.csv
-	rm -rf results/random_forest_model.sav
-	rm -rf results/random_forest_tuning_result.csv
-	rm -rf results/random_forest_confusion_matrix_test_data.png 
-	rm -rf results/random_forest_precision_recall_curve_test_data.png 
-	rm -rf results/random_forest_score_summary_test_data.csv
-	rm -rf results/random_forest_confusion_matrix_train_data.png 
-	rm -rf results/random_forest_precision_recall_curve_train_data.png 
-	rm -rf results/random_forest_score_summary_train_data.csv
-	rm -rf results/numeric_vs_target.svg
-	rm -rf results/cat_vs_target.svg
-	rm -rf results/corr_all.svg
-	rm -rf results/corr_target.svg
-	rm -rf results/feature_exam.svg
-	rm -rf results/price_vs_month.svg
-	rm -rf results/guest_vs_month.svg
-	rm -rf results/rep_guests_prev_cancel.svg
+	rm -rf data/processed/*
+	rm -rf results/*
 	rm -rf doc/hotel_cancellation_predict_report.md
-	rm -rf results/missing_summary.csv
