@@ -13,11 +13,14 @@ Jared Splinter
   - [Results & Discussion](#results-discussion)
       - [Exploratory Data Analysis](#exploratory-data-analysis)
       - [Model Results](#model-results)
+      - [Future Improvements](#future-improvements)
   - [References](#references)
 
 # Predicting Hotel Booking Cancellation from Real World Hotel Bookings
 
-Jared Splinter,
+author: Jared Splinter
+
+contributors: Chen Zhao, Debananda Sarkar, Peter Yang
 
 Created: 11/27/2020
 
@@ -130,12 +133,6 @@ percentage of values missing
 
 <tr>
 
-<th style="text-align:right;">
-
-X1
-
-</th>
-
 <th style="text-align:left;">
 
 feature
@@ -162,12 +159,6 @@ missing\_percentage
 
 <tr>
 
-<td style="text-align:right;">
-
-10
-
-</td>
-
 <td style="text-align:left;">
 
 children
@@ -189,12 +180,6 @@ children
 </tr>
 
 <tr>
-
-<td style="text-align:right;">
-
-13
-
-</td>
 
 <td style="text-align:left;">
 
@@ -218,12 +203,6 @@ country
 
 <tr>
 
-<td style="text-align:right;">
-
-23
-
-</td>
-
 <td style="text-align:left;">
 
 agent
@@ -245,12 +224,6 @@ agent
 </tr>
 
 <tr>
-
-<td style="text-align:right;">
-
-24
-
-</td>
 
 <td style="text-align:left;">
 
@@ -288,58 +261,71 @@ observations. We also observe that 2 ids have over 10,000 observations
 corresponding to specific hotels suggesting a correlation however, we
 did not think for these reasons `agent` would be a good predictor.
 
-Having chosen our predictors, we then plotted the distributions of the
+Having chosen our predictors, we then plotted the densities of the
 numeric features and separated classes by colour (blue for canceled,
-orange for not canceled). Many of the distributions are right skewed as
-they are dominated by 0 values. This may mean many of these numeric
-features may not be good predictors of the targets. A few numeric
-features that looked promising for prediction are
-`total_of_special_requests`, `required_car_parking_spaces`,
-`stay_in_week_nights` and `stay_in_weekend_nights` as they have wider
-distributions. The results for the numeric feature distributions are
-presented in Figure 1.
+orange for not canceled). Many of the densities are right skewed as they
+are dominated by 0 values. This may mean many of these numeric features
+may not be good predictors of the targets. A few numeric features that
+looked promising for prediction are `total_of_special_requests`,
+`required_car_parking_spaces`, `stay_in_week_nights` and
+`stay_in_weekend_nights` as they have wider distributions. The results
+for the numeric feature densities are presented in Figure 1.
 
 <div class="figure">
 
-<img src="../results/numeric_vs_target.svg" alt="Figure 1. Comparison of the numeric distributions of training data predictors between canceled and not canceled bookings." width="100%" />
+<img src="../results/numeric_vs_target.svg" alt="Figure 1. Comparision of numeric densities of training data predictors between canceled and not canceled bookings." width="100%" />
 
 <p class="caption">
 
-Figure 1. Comparison of the numeric distributions of training data
-predictors between canceled and not canceled bookings.
+Figure 1. Comparision of numeric densities of training data predictors
+between canceled and not canceled bookings.
 
 </p>
 
 </div>
 
 We then decided to look at the categorical features of the dataset to
-visualize the differences between classes. To do this, we plotted a 2D
-heatmap of every categorical variable counting the number of
-observations for each. A categorical feature with visible differences in
-the heatmap between canceled and not canceled could be good predictors
-for the model. We find that in particular, `hotel`, `market_segment`,
-`reserved_room_type` and `customer_type` could be viable useful
+visualize the differences between classes. To do this, we plotted a 1D
+heatmap of every categorical variable showing the cancel rate for each.
+A categorical feature with visible differences in the heatmap between
+low and high cancel could be good predictors for the model. We find that
+in particular, `hotel`, `market_segment`, `reserved_room_type`,
+`distribution_channel` and `deposit_type` could be viable useful
 predictors. The results for the categorical heatmaps are presented in
 Figure 2.
 
 <div class="figure">
 
-<img src="../results/cat_vs_target.svg" alt="Figure 2. Comparison of the categorical features of training data predictors between canceled and not canceled bookings." width="100%" />
+<img src="../results/cat_vs_target.svg" alt="Figure 2. Cancel rate of the categorical features of training data predictors. Categories that are more blue have more bookings that have been canceled." width="100%" />
 
 <p class="caption">
 
-Figure 2. Comparison of the categorical features of training data
-predictors between canceled and not canceled bookings.
+Figure 2. Cancel rate of the categorical features of training data
+predictors. Categories that are more blue have more bookings that have
+been canceled.
 
 </p>
 
 </div>
 
+In total, we dropped 4 predictors; `agent`, `company`,
+`reservation_status` and `reservation_status_date` for reasons mentioned
+above. All other predictors were included in the model, at the time of
+making this model we did not know how to perform feature selection, in
+future improvements of this work we would re-create the model with
+feature selection and feature importance in mind to look for improvement
+in model testing.
+
 ### Model Results
 
 We compared a few classification model algorithms using a 5 fold
-cross-validation. Models were scored on the f1 metric. The results of
-the cross-validation scores are presented in Table 2. Compared to the
+cross-validation. Models were scored on the f1 metric. All models were
+evaluated with default hyperparameters where possible and the same
+random state to replicate results. Exceptions to the default
+hyperparameters include the k-Nearest Neighbor classifier had a
+`n_neighbors` hyperparameter set at 3, and Logistic Regression
+classifier had a max iteration set to 1000. The results of the
+cross-validation scores are presented in Table 2. Compared to the
 baseline Dummy Classifier all models scored much higher. Random Forest
 scored the highest validation f1 score followed by Decision Tree.
 However, the fit time of Random Forest was much longer than that of
@@ -359,31 +345,31 @@ Table 2. 5 fold Cross validation scores of classifier models
 
 <th style="text-align:left;">
 
-classifier\_name
+Classifer Name
 
 </th>
 
 <th style="text-align:right;">
 
-fit\_time
+Fit Time
 
 </th>
 
 <th style="text-align:right;">
 
-score\_time
+Score Time
 
 </th>
 
 <th style="text-align:right;">
 
-validation\_f1
+Validation f1
 
 </th>
 
 <th style="text-align:right;">
 
-train\_f1
+Train f1
 
 </th>
 
@@ -603,14 +589,24 @@ Random Forest
 
 As Random Forest classifier scored the highest f1 validation score we
 decided to use it as our classification model for the dataset. The next
-step we took was to run hyperparameter optimization on the model. The
-hyperparameters optimized from Random Forest were `n_estimators` and
-`min_sample_split`. The best model from hyperparameter optimization had
-hyperparameters of `n_estimators = 700` and `min_sample_split = 4` as
-seen in Table 3. Table 3 only includes the top 4 results of the
-hyperparameter optimization to show comparision with other searches. The
-differences in mean test score is very little between the top 3 results
-indicating the hyperparameters may not change the models drastically.
+step we took was to run hyperparameter optimization on the model. We
+chose to perform hyperparameter tuning for only the best performing
+classifier model due to time constraints. The hyperparameters optimized
+from Random Forest were `n_estimators` and `min_sample_split`. There are
+many possible hyperparameters available for Random Forest Classifier
+from sklearn, however in the interest of time we chose these 2
+hyperparameters to optimize. `n_estimators` was chosen as it choses the
+number of trees to be evaluated and we searched between values of 500
+and 1000. `min_samples_split` works in conjunction as the minimum number
+of observations required for a split in a tree values were chosen
+between 4 and 11 to avoid overfitting.
+
+The best model from hyperparameter optimization had hyperparameters of
+`n_estimators = 700` and `min_sample_split = 4` as seen in Table 3.
+Table 3 only includes the top 4 results of the hyperparameter
+optimization to show comparision with other searches. The differences in
+mean test score is very little between the top 3 results indicating the
+hyperparameters may not change the models drastically.
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 
@@ -627,7 +623,7 @@ Classifer
 
 <th style="text-align:right;">
 
-rank\_test\_score
+Rank Test Score
 
 </th>
 
@@ -645,13 +641,13 @@ min\_samples\_split
 
 <th style="text-align:right;">
 
-mean\_test\_score
+Mean Test f1 Score
 
 </th>
 
 <th style="text-align:right;">
 
-mean\_train\_score
+Mean Train f1 Score
 
 </th>
 
@@ -849,10 +845,12 @@ classifier model Random Forest, while it had a good metric score it does
 come with high variance, another classification model may perform better
 on the test data and have the additional benefit of reduced fit time.
 Furthermore, one final limitation of the model can be due to human
-behaviour, unpredictable occurrences could happen to anyone and cause
-circumstances to change, quantifying this as an expected error could e
-beneficial to indicate whether our model is within a good prediction
-range.
+behaviour. Unpredictable occurrences, such as getting sick or hurt,
+could happen to anyone and cause circumstances to change, quantifying
+this as an expected error could be beneficial to indicate whether our
+model is within a good prediction range.
+
+### Future Improvements
 
 To improve this model, we propose further hyperparameter tuning with a
 wider range of numbers. This requires more time as running
@@ -861,14 +859,17 @@ Additionally, we suggest incorporating some feature engineering into the
 model to address if more features should be dropped. While understanding
 which features are important for hotels to reduce the number of
 cancellations, some of the predictors may not be useful and may be
-causing the model to learn unimportant factors.Furthermore, the issue of
-overfitting as mentioned above must be addressed so as not to have a
-model that has learned specific patterns. However, with our current
-model as there is not much drawback for a hotel in a wrong booking
-prediction, they may wish to use this model to get an understanding of a
-booking. There should be note, as mentioned above, that this model does
-not have a perfect prediction and predicted outcomes should not be
-solely relyed upon.
+causing the model to learn unimportant factors. At the time of making
+this report, we did not know how to do feature selection, future work
+should test different methods of feature selection in combination with
+feature engineering to see if an improvement could be made. Furthermore,
+the issue of overfitting as mentioned above must be addressed so as not
+to have a model that has learned specific patterns. However, with our
+current model as there is not much drawback for a hotel in a wrong
+booking prediction, they may wish to use this model to get an
+understanding of a booking. There should be note, as mentioned above,
+that this model does not have a perfect prediction and predicted
+outcomes should not be solely relied upon.
 
 # References
 
