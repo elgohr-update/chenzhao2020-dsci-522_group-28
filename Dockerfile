@@ -1,7 +1,7 @@
 # Docker file for predicting if a reservation is likely to be cancelled by given a hotel booking detail
 # author: Chen Zhao
 # contributors: Jared Splinter, Debananda Sarkar, Peter Yang
-# date: 2020-12-11
+# date: 2020-12-12
 
 # use rocker/tidyverse as the base image
 FROM rocker/tidyverse
